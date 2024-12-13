@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyApp.DataAccess;
+using MyApp.DataAccess.Infrastructure.IRepository;
 using MyApp.Models;
 using System.CodeDom;
 
@@ -8,16 +9,16 @@ namespace Final_Project.Controllers
 {
     public class CategoryController : Controller
     {
-        private ApplicationDbContext _context;
+        private IUnitOfWork _unitOfWork;
 
 
-        public CategoryController(ApplicationDbContext context)
+        public CategoryController(IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
         public IActionResult Index()
         {
-            IEnumerable<Category> categories = _context.Categories;
+            IEnumerable<Category> categories = _unitOfWork.CategoryRepository.GetAll();
             return View(categories);
         }
 
@@ -31,8 +32,9 @@ namespace Final_Project.Controllers
         [AutoValidateAntiforgeryToken]
         public IActionResult Create(Category category)
         {
-            _context.Categories.Add(category);
-            _context.SaveChanges();
+            _unitOfWork.CategoryRepository.Add(category);
+            _unitOfWork.save();
+
             TempData["success"] = "Created Successfully!";
             return RedirectToAction("Index");
         }
@@ -43,7 +45,7 @@ namespace Final_Project.Controllers
             {
                 return NotFound();
             }
-            var model = _context.Categories.Find(id);
+            var model = _unitOfWork.CategoryRepository.GetT(x=>x.Id==id);
             if (model == null)
             {
                 return NotFound();
@@ -58,8 +60,8 @@ namespace Final_Project.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Categories.Update(categories);
-                _context.SaveChanges();
+                _unitOfWork.CategoryRepository.update(categories);
+                _unitOfWork.save();
                 TempData["success"] = "Updated Successfully!";
 
             }
@@ -73,8 +75,8 @@ namespace Final_Project.Controllers
             {
                 return NotFound();
             }
-            var model = _context.Categories.Find(id);
-           
+            var model = _unitOfWork.CategoryRepository.GetT(x => x.Id == id);
+
             if (model == null)
             {
                 return NotFound();
@@ -87,13 +89,13 @@ namespace Final_Project.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int Id)
         {
-            var category = _context.Categories.Find(Id);
+            var category = _unitOfWork.CategoryRepository.GetT(x => x.Id == Id);
 
             if (category == null)
                 return NotFound();
 
-            _context.Categories.Remove(category);
-            _context.SaveChanges();
+            _unitOfWork.CategoryRepository.Del(category);
+            _unitOfWork.save();
             TempData["success"] = "Deleted Successfully!";
             return RedirectToAction("Index");
         }
