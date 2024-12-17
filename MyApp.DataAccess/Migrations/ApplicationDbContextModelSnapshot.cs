@@ -9,7 +9,7 @@ using MyApp.DataAccess;
 
 #nullable disable
 
-namespace Final_Project.Migrations
+namespace MyApp.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot

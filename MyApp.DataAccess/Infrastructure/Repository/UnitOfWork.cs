@@ -23,7 +23,7 @@ namespace MyApp.DataAccess.Infrastructure.Repository
 
         public void save()
         {
-           
+            _context.SaveChanges();
         }
     }
 }
