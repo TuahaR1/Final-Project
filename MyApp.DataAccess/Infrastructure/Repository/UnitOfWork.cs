@@ -10,7 +10,9 @@ namespace MyApp.DataAccess.Infrastructure.Repository
 {
     public class UnitOfWork : IUnitOfWork
     {
-        public ICategoryRepository CategoryRepository { get;private set; }
+        public ICategoryRepository CategoryRepository { get; private set; }
+
+        public IProductRepository ProductRepository { get; private set; }
 
 
         private ApplicationDbContext _context;
@@ -19,7 +21,8 @@ namespace MyApp.DataAccess.Infrastructure.Repository
         {
             _context = context;
             CategoryRepository = new CategoryRepository(context);
-        } 
+            ProductRepository = new ProductRepository(context);
+        }
 
         public void save()
         {

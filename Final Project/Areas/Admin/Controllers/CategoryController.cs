@@ -5,8 +5,9 @@ using MyApp.DataAccess.Infrastructure.IRepository;
 using MyApp.Models;
 using System.CodeDom;
 
-namespace Final_Project.Controllers
+namespace Final_Project.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class CategoryController : Controller
     {
         private IUnitOfWork _unitOfWork;
@@ -45,7 +46,7 @@ namespace Final_Project.Controllers
             {
                 return NotFound();
             }
-            var model = _unitOfWork.CategoryRepository.GetT(x=>x.Id==id);
+            var model = _unitOfWork.CategoryRepository.GetT(x => x.Id == id);
             if (model == null)
             {
                 return NotFound();
@@ -85,7 +86,7 @@ namespace Final_Project.Controllers
 
         }
 
-        [HttpPost,ActionName("Delete")]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int Id)
         {

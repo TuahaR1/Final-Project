@@ -24,7 +24,8 @@ namespace MyApp.DataAccess.Infrastructure.Repository
         public void Add(T entity)
         {
             _dbSet.Add(entity);
-        }
+        } 
+      
 
         public void Del(T entity)
         {
