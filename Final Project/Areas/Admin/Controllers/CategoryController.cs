@@ -19,8 +19,9 @@ namespace Final_Project.Areas.Admin.Controllers
         }
         public IActionResult Index()
         {
-            IEnumerable<Category> categories = _unitOfWork.CategoryRepository.GetAll();
-            return View(categories);
+            CategoryVM categoryVM = new CategoryVM();
+             categoryVM.categories= _unitOfWork.CategoryRepository.GetAll();
+            return View(categoryVM);
         }
 
         [HttpGet]
@@ -40,32 +41,53 @@ namespace Final_Project.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult Edit(int? id)
+        [HttpGet]
+        public IActionResult CreateUpdate(int? id)
         {
+            CategoryVM category = new CategoryVM();
             if (id == 0 || id == null)
             {
-                return NotFound();
+                return View(category);
             }
-            var model = _unitOfWork.CategoryRepository.GetT(x => x.Id == id);
-            if (model == null)
+            else
             {
-                return NotFound();
+                var model = _unitOfWork.CategoryRepository.GetT(x => x.Id == id);
+                if (model == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    category.category = model;
+                    return View(category);
+                }
             }
-            return View(model);
+         
 
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Category categories)
+        public IActionResult CreateUpdate(CategoryVM vm)
         {
-            if (ModelState.IsValid)
-            {
-                _unitOfWork.CategoryRepository.update(categories);
-                _unitOfWork.save();
-                TempData["success"] = "Updated Successfully!";
+           
+                if (vm.category.Id == 0 || vm.category.Id == null)
+                {
+                    _unitOfWork.CategoryRepository.Add(vm.category);
+                    _unitOfWork.save();
+                    TempData["success"] = "Updated Successfully!";
+                }
+                else
+                {
+                    _unitOfWork.CategoryRepository.update(vm.category);
+                    _unitOfWork.save();
+                    TempData["success"] = "Updated Successfully!";
+                }
+            
+               
+                
 
-            }
+            
 
             return RedirectToAction("Index");
         }
