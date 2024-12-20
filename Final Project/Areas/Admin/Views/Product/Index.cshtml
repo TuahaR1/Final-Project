@@ -1,0 +1,49 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Products</h1>
+@model MyApp.Models.ProductVM
+
+<div class="container p-4">
+    <div class="row p-3">
+
+        <div class="col-6">
+            <a asp-action="CreateUpdate" class="btn btn-primary" asp-controller="Product"><i class="bi bi-plus-square"></i>&nbsp;Create New Product</a>
+        </div>
+    </div>
+</div>
+<table class="table table-bordered table-striped" style="width:100%">
+    <thead>
+        <tr>
+            <td>
+                Product Name
+            </td>
+            <td>
+                Product Descripion
+            </td>
+            <td>
+                Price
+            </td>
+            <td>
+                Category
+            </td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.products)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @item.Price
+                </td>
+                <td><a asp-controller="Product" asp-action="CreateUpdate" asp-route-id=@item.Id><i class="bi bi-pencil-square"></i></a> | <a asp-controller="Product" asp-action="Delete" asp-route-id=@item.Id><i class="bi bi-trash3"></i></a> </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+
